@@ -276,7 +276,9 @@ DEBUG="True"
 Before running the Flask application, you need to source these variables:
 
 ```bash
+set -a
 source .env
+set +a
 ```
 
 
@@ -332,14 +334,16 @@ Now you can build it:
 ```bash
 docker build --no-cache -t tgr .
 ```
+This builds a new docker image (`--no-cache`) with the tag (`-t`) called `tgr`.
 
 Then run it:
 
 ```bash
 docker rm -f tgr
-docker run --it  --name tgr -p 5000:5000 -e CLIENT_ID="xxxxxxx" -e CLIENT_SECRET="xxxxxxxxxxxxxxx" -e DEBUG="True" tgr
+docker run -it  --name tgr -p 5000:5000 -e CLIENT_ID="xxxxxxx" -e CLIENT_SECRET="xxxxxxxxxxxxxxx" -e DEBUG="True" tgr
 ```
 
+Runs an interactive mode 
 
 Let's include some other variables as environment variables:
 
