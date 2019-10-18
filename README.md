@@ -396,6 +396,23 @@ if __name__ == '__main__':
     app.run(debug=DEBUG, host=HOST, port=PORT)
 ```
 
+Now if we want to run the container, we need to add many environment variables to the docker run command. An easier solution is using `--env-file    ` with Docker run:
+
+```bash
+docker run -it --env-file .env tgr
+```
+
+Our `.env` file looks like the following one:
+
+```
+CLIENT_ID="xxxx"
+CLIENT_SECRET="xxxx"
+ENV="dev"
+DEBUG="True"
+HOST="0.0.0.0"
+PORT=5000
+```
+
 For security reasons, let's change the user inside the container from root to a user with less rights that we create:
 
 ```
@@ -417,23 +434,6 @@ USER pyuser
 
 EXPOSE 5000
 CMD ["python","./app.py"]
-```
-
-Now if we want to run the container, we need to add many environment variables to the docker run command. An easier solution is using `--env-file    ` with Docker run:
-
-```bash
-docker run -it --env-file .env my_container
-```
-
-Our .env file looks like the following one:
-
-```
-CLIENT_ID="xxxx"
-CLIENT_SECRET="xxxx"
-ENV="dev"
-DEBUG="True"
-HOST="0.0.0.0"
-PORT=5000
 ```
 
 After this modification, rebuild the image `docker build -t tgr .` and run it using:
