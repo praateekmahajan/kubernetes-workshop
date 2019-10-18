@@ -312,7 +312,7 @@ Now, let's freeze the dependencies:
 pip freeze > requirements.txt
 ```
 
-Before running the API on Kubernetes, let's create a Dockerfile. This is a typical Dockerfile for a Python app:
+Before running the API on Kubernetes, let's create a new file and call it `Dockerfile`. This is what a typical `Dockerfile` for a Python app looks like:
 
 ```
 FROM python:3
