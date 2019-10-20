@@ -212,7 +212,7 @@ def get_repos():
     return jsonify({'repos':r })
 
 if __name__ == '__main__':
-    app.run(debug=DEBUG)
+    app.run(debug=DEBUG, host="0.0.0.0")
 ```
 
 The code above will return the top "n" repositories using Python as a programming language. We can use other languages too:
@@ -261,7 +261,7 @@ def get_repos():
             })
 
 if __name__ == '__main__':
-    app.run(debug=DEBUG)
+    app.run(debug=DEBUG, host="0.0.0.0")
 ```
 
 In a .env file, add the variables you want to use:
@@ -283,7 +283,7 @@ set +a
 
 
 
-Now, you can go to `http://0.0.0.0:5000/?n=1&l=python` to get the trendiest Python repository or `http://0.0.0.0:5000/?n=1&l=c` for C programming language.
+Now, if we run `python app.py` we can can go to `http://0.0.0.0:5000/?n=1&l=python` to get the trendiest Python repository or `http://0.0.0.0:5000/?n=1&l=c` for C programming language.
 Here is a list of other programming languages you can test your code with:
 
 ```
@@ -316,16 +316,24 @@ pip freeze > requirements.txt
 
 Before running the API on Kubernetes, let's create a new file and call it `Dockerfile`. This is what a typical `Dockerfile` for a Python app looks like:
 
-```
+```yaml
+# FROM means which docker image to start from
+# We start from Python3 image
 FROM python:3
+# This sets the environemnt flag of PYTHONBUFFERED = 1, read here https://git.io/JeBxL
 ENV PYTHONUNBUFFERED 1
+# Create a new directory /app
 RUN mkdir /app
+# Sets the working directory to /app for any command that follows it
 WORKDIR /app
-COPY requirements.txt /app
+# Copy from . (i.e current folder where Dockerfile is) to /app in docker container
+COPY . /app
+# Run familiar pip commands
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-COPY . /app
+# Expose informs Docker that the container listens on 5000 at runtime.
 EXPOSE 5000
+# Finally run our app.py
 CMD [ "python", "app.py" ]
 ```
 
@@ -339,7 +347,6 @@ This builds a new docker image (`--no-cache`) with the tag (`-t`) called `tgr`.
 Then run it:
 
 ```bash
-docker rm -f tgr
 docker run -it  --name tgr -p 5000:5000 -e CLIENT_ID="xxxxxxx" -e CLIENT_SECRET="xxxxxxxxxxxxxxx" -e DEBUG="True" tgr
 ```
 
@@ -443,7 +450,7 @@ docker rm -f tgr;
 docker run -it  --name tgr -p 5000:5000 --env-file .env  tgr
 ```
 
-Our application runs using `python app.py` which is the webserver that ships with Flask and t's great for development and local execution of your program, however, it's not designed to run in a production mode, whether it's a monolithic app or a microservice.
+Our application runs using `python app.py` which is the webserver that ships with Flask and it's great for development and local execution of your program, however, it's not designed to run in a production mode, whether it's a monolithic app or a microservice.
 
 A production server typically receives abuse from spammers, script kiddies, and should be able to handle high traffic. In our case, a good solution is using a WSGI HTTP server like Gunicorn (or uWsgi).
 
