@@ -106,7 +106,7 @@ def index():
     return "Hello, World!"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
 ```
 
 This will return a hello world message when a user requests the "/" route.
@@ -173,7 +173,7 @@ def get_repos():
     return jsonify({'repos':r })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
 ```
 
 Let's hide the Github token and secret as well as other variables in the environment.
